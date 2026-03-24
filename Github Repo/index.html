@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emilio Adams - Environmental Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c0a;
+    --surface: #141412;
+    --border: #232320;
+    --sub: #38382f;
+    --muted: #6b6b5e;
+    --mid: #9a9a8a;
+    --body: #c8c8b8;
+    --head: #eeeee6;
+    --white: #f8f8f2;
+    --accent: #b8a882;
+    --mark: #d4c49a;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "DM Sans", sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(184, 168, 130, 0.08), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.04), transparent 28%),
+      var(--bg);
+    color: var(--body);
+    font-weight: 300;
+    overflow-x: hidden;
+    line-height: 1.6;
+    cursor: none;
+  }
+
+  button, input, textarea {
+    font: inherit;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: inherit;
+  }
+
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 1px solid var(--mark);
+    outline-offset: 4px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .cur {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--mark);
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width .2s, height .2s;
+    mix-blend-mode: difference;
+  }
+
+  .cur-ring {
+    position: fixed;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 196, 154, .3);
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3.5rem;
+    background: linear-gradient(to bottom, rgba(12, 12, 10, .96) 60%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s;
+  }
+
+  nav.scrolled { border-color: var(--border); }
+
+  .nav-name {
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: .04em;
+    cursor: pointer;
+    transition: color .2s;
+    padding: 0;
+  }
+
+  .nav-name:hover { color: var(--mark); }
+
+  .nav-links {
+    display: flex;
+    gap: 2.8rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: "DM Mono", monospace;
+    font-size: .7rem;
+    font-weight: 300;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color .2s;
+    position: relative;
+    padding-bottom: 2px;
+  }
+
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--mark);
+    transition: width .3s;
+  }
+
+  .nav-links a:hover,
+  .nav-links a[aria-current="page"] {
+    color: var(--body);
+  }
+
+  .nav-links a:hover::after,
+  .nav-links a[aria-current="page"]::after {
+    width: 100%;
+  }
+
+  .page {
+    display: none;
+    min-height: 100vh;
+  }
+
+  .page.active {
+    display: block;
+    animation: pageIn .5s forwards;
+  }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 640px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url("assets/images/hero-home.jpg") center 42%/cover no-repeat;
+    filter: grayscale(100%) brightness(.52) contrast(1.1);
+    transform: scale(1.05);
+    animation: slowZ 24s ease-in-out infinite alternate;
+  }
+
+  @keyframes slowZ {
+    from { transform: scale(1.05); }
+    to { transform: scale(1.12); }
+  }
+
+  .hero-ov {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(175deg, rgba(12, 12, 10, .2) 0%, rgba(12, 12, 10, .6) 55%, rgba(12, 12, 10, .97) 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: flex-end;
+    padding: 0 4rem 5.5rem;
+    gap: 3rem;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    font-family: "DM Mono", monospace;
+    font-size: .68rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: 1.4rem;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fadeUp .8s .2s forwards;
+  }
+
+  .hero-tag::before {
+    content: "";
+    display: inline-block;
+    width: 22px;
+    height: 1px;
+    background: var(--mark);
+  }
+
+  .hero-headline {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(3.2rem, 7vw, 6.8rem);
+    font-weight: 400;
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -.02em;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp .9s .38s forwards;
+  }
+
+  .hero-headline em { font-style: italic; color: var(--accent); }
+
+  .hero-sub {
+    margin-top: 1.6rem;
+    font-size: .85rem;
+    line-height: 1.8;
+    color: var(--mid);
+    max-width: 400px;
+    font-weight: 300;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fadeUp .8s .58s forwards;
+  }
+
+  .hero-cta-row {
+    margin-top: 2.4rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp .7s .75s forwards;
+  }
+
+  .btn-primary,
+  .btn-ghost,
+  .f-submit {
+    border-radius: 999px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: "DM Mono", monospace;
+    font-size: .68rem;
+    font-weight: 400;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: .85rem 1.8rem;
+    border: none;
+    cursor: pointer;
+    transition: background .25s, gap .25s, transform .25s;
+  }
+
+  .btn-primary:hover {
+    background: var(--mark);
+    gap: 1rem;
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: transparent;
+    color: var(--mid);
+    font-family: "DM Mono", monospace;
+    font-size: .68rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: .85rem 1.4rem;
+    border: 1px solid var(--sub);
+    cursor: pointer;
+    transition: border-color .25s, color .25s, background .25s;
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--muted);
+    color: var(--body);
+    background: rgba(255, 255, 255, .02);
+  }
+
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1.4rem;
+    opacity: 0;
+    animation: fadeUp .8s .9s forwards;
+  }
+
+  .hero-stat {
+    text-align: right;
+    border-right: 2px solid var(--sub);
+    padding-right: 1.2rem;
+  }
+
+  .hero-stat-n {
+    font-family: "Playfair Display", serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    color: var(--head);
+    line-height: 1;
+    font-style: italic;
+  }
+
+  .hero-stat-l {
+    font-family: "DM Mono", monospace;
+    font-size: .6rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: .3rem;
+  }
+
+  .hero-coord {
+    font-family: "DM Mono", monospace;
+    font-size: .6rem;
+    letter-spacing: .1em;
+    color: var(--sub);
+  }
+
+  .strip {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.4rem 4rem;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .strip-item {
+    flex: 1 1 220px;
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: 0 1.8rem;
+    border-right: 1px solid var(--border);
+  }
+
+  .strip-item:first-child { padding-left: 0; }
+  .strip-item:last-child { border-right: none; }
+
+  .strip-num {
+    font-family: "DM Mono", monospace;
+    font-size: .58rem;
+    color: var(--mark);
+    letter-spacing: .1em;
+  }
+
+  .strip-txt {
+    font-family: "DM Mono", monospace;
+    font-size: .62rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .statement {
+    padding: 8rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 8rem;
+    align-items: start;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .8rem;
+    font-family: "DM Mono", monospace;
+    font-size: .66rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: 2rem;
+  }
+
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 26px;
+    height: 1px;
+    background: var(--mark);
+  }
+
+  .sec-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--head);
+  }
+
+  .sec-title em { font-style: italic; color: var(--accent); }
+
+  .stmt-right p {
+    font-size: .9rem;
+    line-height: 1.88;
+    color: var(--muted);
+    margin-bottom: 1.3rem;
+    font-weight: 300;
+  }
+
+  .stmt-right p strong,
+  .cs-txt strong,
+  .ab-main p strong,
+  .sb-row strong {
+    color: var(--body);
+    font-weight: 400;
+  }
+
+  .bring { padding: 0 4rem 8rem; }
+
+  .bring-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  .b-card {
+    padding: 2.5rem;
+    border-right: 1px solid var(--border);
+    transition: background .3s, transform .3s;
+  }
+
+  .b-card:last-child { border-right: none; }
+
+  .b-card:hover {
+    background: var(--surface);
+    transform: translateY(-2px);
+  }
+
+  .b-badge {
+    font-family: "DM Mono", monospace;
+    font-size: .58rem;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: 1.2rem;
+  }
+
+  .b-title {
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--head);
+    margin-bottom: 1rem;
+  }
+
+  .b-desc {
+    font-size: .83rem;
+    line-height: 1.8;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .b-list {
+    margin-top: 1.2rem;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+  }
+
+  .b-list li {
+    font-family: "DM Mono", monospace;
+    font-size: .62rem;
+    letter-spacing: .06em;
+    color: var(--sub);
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .b-list li::before {
+    content: "-";
+    position: absolute;
+    left: 0;
+    color: var(--mark);
+    font-size: .6rem;
+  }
+
+  .preview { padding: 0 4rem 8rem; }
+
+  .preview-hdr {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .prev-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-rows: 260px;
+    gap: .5rem;
+  }
+
+  .p-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, .04);
+    padding: 0;
+    text-align: left;
+  }
+
+  .p-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%) brightness(.7) contrast(1.1);
+    transition: transform .7s, filter .5s;
+  }
+
+  .p-card:hover img {
+    transform: scale(1.06);
+    filter: grayscale(85%) brightness(.8) contrast(1.1);
+  }
+
+  .p-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.4rem;
+    background: linear-gradient(to top, rgba(12, 12, 10, .9), transparent);
+  }
+
+  .p-cat,
+  .pi-cat,
+  .cs-lbl,
+  .dir-lbl,
+  .sb-lbl,
+  .c-lbl,
+  .f-lbl {
+    font-family: "DM Mono", monospace;
+  }
+
+  .p-cat {
+    font-size: .58rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: .3rem;
+  }
+
+  .p-title {
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    color: var(--white);
+    font-weight: 400;
+  }
+
+  .pg-header {
+    padding: 9rem 4rem 3.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pg-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.8rem, 6vw, 5.5rem);
+    font-weight: 400;
+    color: var(--head);
+    line-height: 1;
+  }
+
+  .pg-title em { font-style: italic; color: var(--accent); }
+
+  .pg-desc {
+    margin-top: 1rem;
+    font-size: .83rem;
+    color: var(--muted);
+    max-width: 380px;
+    line-height: 1.7;
+  }
+
+  .pg-meta {
+    font-family: "DM Mono", monospace;
+    font-size: .66rem;
+    letter-spacing: .1em;
+    color: var(--sub);
+    text-align: right;
+    line-height: 1.9;
+  }
+
+  .proj-list { padding: 0 4rem 8rem; }
+
+  .proj-item {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 4rem;
+    align-items: start;
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp .8s forwards;
+  }
+
+  .proj-item:nth-child(1) { animation-delay: .05s; }
+  .proj-item:nth-child(2) { animation-delay: .15s; grid-template-columns: 1.1fr 1fr; }
+  .proj-item:nth-child(2) .pi-img { order: 2; }
+  .proj-item:nth-child(2) .pi-copy { order: 1; }
+  .proj-item:nth-child(3) { animation-delay: .25s; }
+  .proj-item:nth-child(4) { animation-delay: .35s; }
+
+  .pi-img {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border-radius: 28px;
+  }
+
+  .pi-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%) brightness(.72) contrast(1.1);
+    transition: transform .8s;
+  }
+
+  .proj-item:hover .pi-img img { transform: scale(1.04); }
+
+  .pi-idx {
+    position: absolute;
+    top: 1rem;
+    left: 1.2rem;
+    font-family: "DM Mono", monospace;
+    font-size: .58rem;
+    letter-spacing: .16em;
+    color: var(--mark);
+  }
+
+  .pi-copy { padding-top: .5rem; }
+
+  .pi-cat {
+    font-size: .62rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: 1rem;
+  }
+
+  .pi-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 400;
+    color: var(--head);
+    line-height: 1.2;
+    margin-bottom: 2rem;
+  }
+
+  .cs {
+    margin-bottom: 1.6rem;
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cs:last-of-type { border-bottom: none; }
+
+  .cs-lbl {
+    font-size: .58rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: .5rem;
+  }
+
+  .cs-txt,
+  .dir-txt,
+  .ct-info > p,
+  .c-val {
+    font-size: .83rem;
+    line-height: 1.82;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-top: 1.5rem;
+  }
+
+  .tag {
+    font-family: "DM Mono", monospace;
+    font-size: .6rem;
+    letter-spacing: .08em;
+    color: var(--sub);
+    border: 1px solid var(--border);
+    padding: .2rem .65rem;
+    border-radius: 999px;
+  }
+
+  .ab-hero,
+  .ct-hero {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ab-hero {
+    height: 52vh;
+    min-height: 380px;
+  }
+
+  .ab-bg {
+    position: absolute;
+    inset: 0;
+    background: url("assets/images/hero-about.jpg") center center/cover no-repeat;
+    filter: grayscale(100%) brightness(.48) contrast(1.15);
+  }
+
+  .ab-ov,
+  .ct-ov {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ab-ov { background: linear-gradient(to bottom, rgba(12, 12, 10, .3), rgba(12, 12, 10, .92)); }
+
+  .ab-hero-c,
+  .ct-hero-c {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 3rem 4rem;
+  }
+
+  .ab-hero-c h1,
+  .ct-hero-c h1 {
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.05;
+  }
+
+  .ab-hero-c h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+  }
+
+  .ab-hero-c h1 em,
+  .ct-hero-c h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .ab-pos {
+    margin-top: .8rem;
+    font-family: "DM Mono", monospace;
+    font-size: .66rem;
+    letter-spacing: .14em;
+    color: var(--muted);
+  }
+
+  .ab-body {
+    padding: 6rem 4rem;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .ab-main h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 1.9rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent);
+    margin-bottom: .8rem;
+    line-height: 1.3;
+  }
+
+  .rule {
+    width: 36px;
+    height: 1px;
+    background: var(--mark);
+    margin: 1.8rem 0;
+  }
+
+  .ab-main p {
+    font-size: .9rem;
+    line-height: 1.9;
+    color: var(--muted);
+    margin-bottom: 1.3rem;
+    font-weight: 300;
+  }
+
+  .dir-block {
+    margin-top: 3rem;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, .01));
+    border-radius: 24px;
+  }
+
+  .dir-lbl {
+    font-size: .6rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: .8rem;
+  }
+
+  .sb-block { margin-bottom: 2.8rem; }
+
+  .sb-lbl {
+    font-size: .6rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--mark);
+    padding-bottom: .6rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: .9rem;
+  }
+
+  .sb-row {
+    padding: .55rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: .83rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .sb-row strong {
+    display: block;
+    font-size: .83rem;
+    margin-bottom: .1rem;
+  }
+
+  .ab-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .4rem;
+    padding: 0 4rem 7rem;
+  }
+
+  .ap {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: 24px;
+  }
+
+  .ap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%) brightness(.68) contrast(1.05);
+    transition: transform .6s;
+  }
+
+  .ap:hover img { transform: scale(1.04); }
+
+  .ct-hero {
+    height: 56vh;
+    min-height: 380px;
+  }
+
+  .ct-bg {
+    position: absolute;
+    inset: 0;
+    background: url("assets/images/hero-contact.jpg") center center/cover no-repeat;
+    filter: grayscale(100%) brightness(.44) contrast(1.1);
+    animation: slowZ 26s ease-in-out infinite alternate;
+  }
+
+  .ct-ov { background: linear-gradient(to bottom, rgba(12, 12, 10, .25), rgba(12, 12, 10, .9)); }
+
+  .ct-hero-c h1 {
+    font-size: clamp(2.5rem, 6vw, 5.5rem);
+    line-height: 1;
+  }
+
+  .ct-sub {
+    margin-top: .8rem;
+    font-size: .83rem;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.75;
+  }
+
+  .ct-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    padding: 5.5rem 4rem 7rem;
+    align-items: start;
+  }
+
+  .ct-info h2 {
+    font-family: "Playfair Display", serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--head);
+    margin-bottom: 1rem;
+  }
+
+  .ct-rows { display: flex; flex-direction: column; }
+
+  .c-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .c-lbl {
+    font-size: .6rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--mark);
+    padding-top: .1rem;
+  }
+
+  .ct-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    background: rgba(255, 255, 255, .02);
+  }
+
+  .f-field {
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+  }
+
+  .f-lbl {
+    font-size: .6rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .f-inp,
+  .f-ta {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--head);
+    font-family: "DM Sans", sans-serif;
+    font-size: .9rem;
+    font-weight: 300;
+    padding: .75rem 0;
+    outline: none;
+    transition: border-color .25s;
+    width: 100%;
+  }
+
+  .f-inp:focus,
+  .f-ta:focus { border-color: var(--mark); }
+
+  .f-ta {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .f-submit {
+    align-self: flex-start;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-family: "DM Mono", monospace;
+    font-size: .68rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    padding: .9rem 2rem;
+    cursor: pointer;
+    transition: all .25s;
+    margin-top: .5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+  }
+
+  .f-submit:hover {
+    background: var(--surface);
+    border-color: var(--mark);
+    color: var(--mark);
+    gap: 1.1rem;
+  }
+
+  .form-status {
+    min-height: 1.2rem;
+    font-size: .75rem;
+    color: var(--mid);
+  }
+
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .ft-name {
+    font-family: "Playfair Display", serif;
+    font-size: .95rem;
+    font-weight: 400;
+    color: var(--sub);
+    letter-spacing: .04em;
+  }
+
+  .ft-copy {
+    font-family: "DM Mono", monospace;
+    font-size: .58rem;
+    letter-spacing: .12em;
+    color: var(--border);
+    text-transform: uppercase;
+  }
+
+  .ft-nav {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .ft-nav a {
+    font-family: "DM Mono", monospace;
+    font-size: .62rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--sub);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color .2s;
+  }
+
+  .ft-nav a:hover { color: var(--mid); }
+
+  @media (max-width: 1080px) {
+    nav,
+    .hero-content,
+    .strip,
+    .statement,
+    .bring,
+    .preview,
+    .pg-header,
+    .proj-list,
+    .ab-hero-c,
+    .ab-body,
+    .ab-photos,
+    .ct-hero-c,
+    .ct-body,
+    footer {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    .statement,
+    .ab-body,
+    .ct-body,
+    .proj-item,
+    .proj-item:nth-child(2) {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .proj-item:nth-child(2) .pi-img,
+    .proj-item:nth-child(2) .pi-copy {
+      order: initial;
+    }
+
+    .bring-grid,
+    .prev-grid,
+    .ab-photos {
+      grid-template-columns: 1fr;
+    }
+
+    .prev-grid {
+      grid-template-rows: repeat(3, 260px);
+    }
+
+    .hero-content {
+      grid-template-columns: 1fr;
+      align-items: end;
+    }
+
+    .hero-right {
+      align-items: flex-start;
+    }
+
+    .hero-stat {
+      text-align: left;
+      border-right: none;
+      border-left: 2px solid var(--sub);
+      padding-right: 0;
+      padding-left: 1rem;
+    }
+  }
+
+  @media (max-width: 720px) {
+    body {
+      cursor: auto;
+    }
+
+    nav {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .85rem;
+    }
+
+    .nav-links {
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .hero {
+      min-height: auto;
+      height: auto;
+    }
+
+    .hero-content {
+      padding-top: 9rem;
+      padding-bottom: 3.5rem;
+      gap: 2rem;
+    }
+
+    .hero-cta-row,
+    .preview-hdr,
+    footer {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .statement,
+    .bring,
+    .preview,
+    .proj-list,
+    .ab-body,
+    .ct-body {
+      padding-top: 4.5rem;
+      padding-bottom: 4.5rem;
+    }
+
+    .strip {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+
+    .strip-item {
+      padding: .7rem 0;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .strip-item:last-child {
+      border-bottom: none;
+    }
+
+    .pg-header {
+      padding-top: 8rem;
+    }
+
+    .ct-form {
+      padding: 1.35rem;
+    }
+
+    .c-row {
+      grid-template-columns: 1fr;
+      gap: .35rem;
+    }
+
+    .cur,
+    .cur-ring {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="cur" id="cur" aria-hidden="true"></div>
+<div class="cur-ring" id="ring" aria-hidden="true"></div>
+
+<nav id="nav" aria-label="Primary">
+  <button class="nav-name" type="button" data-go="home">Emilio Adams</button>
+  <ul class="nav-links">
+    <li><a href="#home" data-go="home" aria-current="page">Home</a></li>
+    <li><a href="#work" data-go="work">Work</a></li>
+    <li><a href="#about" data-go="about">About</a></li>
+    <li><a href="#contact" data-go="contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main>
+  <section id="page-home" class="page active" aria-labelledby="home-title">
+    <div class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-ov" aria-hidden="true"></div>
+      <div class="hero-content">
+        <div>
+          <div class="hero-tag">Environmental Design · CU Boulder</div>
+          <h1 id="home-title" class="hero-headline">Landscape built<br>from <em>first principles.</em></h1>
+          <p class="hero-sub">I design outdoor environments that work with ecology, not around it - grounded in site analysis, spatial strategy, and the specific character of the Mountain West.</p>
+          <div class="hero-cta-row">
+            <button class="btn-primary" type="button" data-go="work">View Selected Work -></button>
+            <button class="btn-ghost" type="button" data-go="about">About Emilio</button>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-stat">
+            <div class="hero-stat-n">4</div>
+            <div class="hero-stat-l">Studio Projects</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-n">3</div>
+            <div class="hero-stat-l">Years in Program</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-n">'26</div>
+            <div class="hero-stat-l">Expected Graduation</div>
+          </div>
+          <div class="hero-coord">40.0150 deg N · 105.2705 deg W</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="strip" aria-label="Practice areas">
+      <div class="strip-item"><span class="strip-num">01</span><span class="strip-txt">Landscape Architecture</span></div>
+      <div class="strip-item"><span class="strip-num">02</span><span class="strip-txt">Ecological Site Design</span></div>
+      <div class="strip-item"><span class="strip-num">03</span><span class="strip-txt">Spatial Analysis &amp; GIS</span></div>
+      <div class="strip-item"><span class="strip-num">04</span><span class="strip-txt">Mountain West Focus</span></div>
+      <div class="strip-item"><span class="strip-num">05</span><span class="strip-txt">Available · Summer 2026</span></div>
+    </div>
+
+    <div class="statement">
+      <div>
+        <div class="eyebrow">Approach</div>
+        <h2 class="sec-title">Design that starts with what<br>the <em>land already knows.</em></h2>
+      </div>
+      <div class="stmt-right">
+        <p>Most design problems in landscape architecture are <strong>analysis problems in disguise</strong>. Get the site reading right - hydrology, microclimate, succession, culture - and the design decisions tend to follow with a kind of inevitability.</p>
+        <p>My studio practice runs between hand drawing and digital tools because I find the handoff between scales forces clear thinking. A sketch cannot lie about proportion. A grading plan cannot fake the drainage logic.</p>
+        <p>I'm building a practice that takes the Mountain West seriously on its own terms - its dryness, its altitude, its particular light - rather than importing design language from somewhere else.</p>
+      </div>
+    </div>
+
+    <div class="bring">
+      <div class="eyebrow">What I Bring</div>
+      <div class="bring-grid">
+        <div class="b-card">
+          <div class="b-badge">01 · Analytical</div>
+          <div class="b-title">Site Reading</div>
+          <p class="b-desc">Rigorous environmental analysis before any design move. I document what is already happening on a site before proposing what should happen.</p>
+          <ul class="b-list">
+            <li>Hydrological &amp; drainage analysis</li>
+            <li>Sun / wind / microclimate mapping</li>
+            <li>Vegetation community surveys</li>
+            <li>GIS &amp; QGIS documentation</li>
+          </ul>
+        </div>
+        <div class="b-card">
+          <div class="b-badge">02 · Design</div>
+          <div class="b-title">Spatial Strategy</div>
+          <p class="b-desc">Design solutions that connect ecology to human use - paths, landforms, planting, and structure that serve both function and experience.</p>
+          <ul class="b-list">
+            <li>Landform &amp; grading design</li>
+            <li>Native planting palettes</li>
+            <li>Threshold &amp; wayfinding design</li>
+            <li>AutoCAD · Rhino · SketchUp</li>
+          </ul>
+        </div>
+        <div class="b-card">
+          <div class="b-badge">03 · Communication</div>
+          <div class="b-title">Clear Representation</div>
+          <p class="b-desc">Design only works if it can be communicated. I work across hand drawing, digital visualization, and written narrative to present ideas at every stage.</p>
+          <ul class="b-list">
+            <li>Hand rendering &amp; section drawing</li>
+            <li>Physical &amp; digital models</li>
+            <li>Adobe CC presentation layouts</li>
+            <li>Non-technical audience framing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="preview-hdr">
+        <div class="eyebrow" style="margin-bottom:0">Selected Work</div>
+        <button class="btn-ghost" type="button" data-go="work">All Projects -></button>
+      </div>
+      <div class="prev-grid">
+        <button class="p-card" type="button" data-go="work" aria-label="View selected work">
+          <img src="assets/images/project-01.jpg" alt="Site plan drawing for riparian corridor restoration">
+          <div class="p-info"><div class="p-cat">Ecological Design · Studio III</div><div class="p-title">Riparian Corridor Restoration</div></div>
+        </button>
+        <button class="p-card" type="button" data-go="work" aria-label="View selected work">
+          <img src="assets/images/project-02.jpg" alt="Section drawings for alpine threshold gateway">
+          <div class="p-info"><div class="p-cat">Site Design · Studio II</div><div class="p-title">Alpine Threshold Gateway</div></div>
+        </button>
+        <button class="p-card" type="button" data-go="work" aria-label="View selected work">
+          <img src="assets/images/project-03.jpg" alt="Wind mitigation analysis drawing">
+          <div class="p-info"><div class="p-cat">Analysis · Documentation</div><div class="p-title">Mesa Wind &amp; Shadow Study</div></div>
+        </button>
+      </div>
+    </div>
+
+    <footer>
+      <span class="ft-name">Emilio Adams</span>
+      <span class="ft-copy">© 2026 · All Rights Reserved</span>
+      <ul class="ft-nav">
+        <li><a href="#work" data-go="work">Work</a></li>
+        <li><a href="#about" data-go="about">About</a></li>
+        <li><a href="#contact" data-go="contact">Contact</a></li>
+      </ul>
+    </footer>
+  </section>
+
+  <section id="page-work" class="page" aria-labelledby="work-title">
+    <div class="pg-header">
+      <div>
+        <h1 id="work-title" class="pg-title">Selected<br><em>Work</em></h1>
+        <p class="pg-desc">Three years of studio and field-based design, grounded in ecological analysis and the terrain of the Mountain West.</p>
+      </div>
+      <div class="pg-meta">
+        Environmental Design Studio<br>
+        University of Colorado Boulder<br>
+        2023 - 2026
+      </div>
+    </div>
+
+    <div class="proj-list">
+      <article class="proj-item">
+        <div class="pi-img"><span class="pi-idx">01 / 04</span><img src="assets/images/project-01.jpg" alt="Site plan drawing for riparian restoration project"></div>
+        <div class="pi-copy">
+          <p class="pi-cat">Ecological Design · Studio III</p>
+          <h2 class="pi-title">Riparian Corridor<br>Restoration</h2>
+          <div class="cs"><div class="cs-lbl">Context</div><p class="cs-txt">A degraded riparian corridor along Boulder Creek had been treated as flood infrastructure for decades - channelized, constrained, and cut off from surrounding neighborhoods.</p></div>
+          <div class="cs"><div class="cs-lbl">Objective</div><p class="cs-txt">Restore the creek corridor's ecological function while transforming it into a continuous public greenway. Flood resilience and community amenity as the same move.</p></div>
+          <div class="cs"><div class="cs-lbl">Strategy &amp; Execution</div><p class="cs-txt">Site analysis traced existing meander patterns, soil types, and riparian plant communities. <strong>Design language was drawn directly from creek geomorphology</strong> - sinuous paths mirroring meander geometry, canopy structures echoing cottonwood form, bioswales reading as restored oxbow features. Native planting palette organized by flood frequency zone. Grading designed to detain the 100-year event within the corridor itself.</p></div>
+          <div class="cs"><div class="cs-lbl">Takeaway</div><p class="cs-txt">The strongest design decisions were ecological ones. When you let hydrology drive the layout, the human experience follows almost automatically - the path goes where the water logic takes it.</p></div>
+          <div class="tags"><span class="tag">Ecological Design</span><span class="tag">Riparian Systems</span><span class="tag">Grading</span><span class="tag">Boulder CO</span><span class="tag">Studio III</span></div>
+        </div>
+      </article>
+
+      <article class="proj-item">
+        <div class="pi-img"><span class="pi-idx">02 / 04</span><img src="assets/images/project-02.jpg" alt="Section drawings for Rocky Mountain gateway landscape"></div>
+        <div class="pi-copy">
+          <p class="pi-cat">Site Design · Studio II</p>
+          <h2 class="pi-title">Alpine Threshold:<br>Rocky Mountain Gateway</h2>
+          <div class="cs"><div class="cs-lbl">Context</div><p class="cs-txt">A trailhead entry zone at the montane-to-subalpine transition - high visibility from the road, exposed to severe weather, heavy foot traffic into a sensitive wilderness boundary.</p></div>
+          <div class="cs"><div class="cs-lbl">Objective</div><p class="cs-txt">Design a minimal structure that manages vehicle arrival without announcing itself - infrastructure that performs without competing with the landscape it serves.</p></div>
+          <div class="cs"><div class="cs-lbl">Strategy &amp; Execution</div><p class="cs-txt">Embed the structure into existing topography so it disappears on approach and reveals itself only at the threshold moment of entry. <strong>The drama is choreographed, not visual.</strong> Material selection: weathering steel, local granite, and sedum roofing programmed to colonize over three to five years. Grading designed around a low stone retaining wall that reads as natural rockfall from the road.</p></div>
+          <div class="cs"><div class="cs-lbl">Takeaway</div><p class="cs-txt">The best infrastructure at elevation is the kind that earns its place by becoming invisible. Restraint is a design choice, not a lack of one.</p></div>
+          <div class="tags"><span class="tag">Threshold Design</span><span class="tag">Alpine Ecology</span><span class="tag">Materials Strategy</span><span class="tag">Studio II</span></div>
+        </div>
+      </article>
+
+      <article class="proj-item">
+        <div class="pi-img"><span class="pi-idx">03 / 04</span><img src="assets/images/project-03.jpg" alt="Environmental analysis for mesa wind and shadow study"></div>
+        <div class="pi-copy">
+          <p class="pi-cat">Landscape Analysis · Site Documentation</p>
+          <h2 class="pi-title">Mesa Siting Study:<br>Wind &amp; Shadow</h2>
+          <div class="cs"><div class="cs-lbl">Context</div><p class="cs-txt">A 40-acre mesa west of Boulder proposed for low-density development - exposed tableland, significant wind loading, complex seasonal shadow patterns from adjacent peaks.</p></div>
+          <div class="cs"><div class="cs-lbl">Objective</div><p class="cs-txt">Produce an environmental baseline analysis detailed enough to drive defensible siting decisions for any built elements on the mesa.</p></div>
+          <div class="cs"><div class="cs-lbl">Strategy &amp; Execution</div><p class="cs-txt">Layered analysis across six variables: seasonal sun angles, prevailing wind vectors, drainage patterns, soil horizons, vegetation communities, and existing views. <strong>Each layer mapped independently, then overlaid to identify where constraints align and where they create genuine conflict.</strong> GIS analysis for spatial work; hand-drawn wind roses and sun path diagrams for non-technical client presentation.</p></div>
+          <div class="cs"><div class="cs-lbl">Takeaway</div><p class="cs-txt">Analysis is a design act. The layering decisions - what to include, what weight to give each variable - shape the conclusions as much as the data does.</p></div>
+          <div class="tags"><span class="tag">Site Analysis</span><span class="tag">ArcGIS Pro</span><span class="tag">Environmental Studies</span><span class="tag">Documentation</span></div>
+        </div>
+      </article>
+
+      <article class="proj-item">
+        <div class="pi-img"><span class="pi-idx">04 / 04</span><img src="assets/images/project-04.jpg" alt="Regional connection diagram for campus commons project"></div>
+        <div class="pi-copy">
+          <p class="pi-cat">Urban Landscape · Collaborative Studio</p>
+          <h2 class="pi-title">CU Boulder<br>South Campus Commons</h2>
+          <div class="cs"><div class="cs-lbl">Context</div><p class="cs-txt">An underused service corridor on CU Boulder's south campus - functionally invisible to students, ecologically unmanaged, missing an opportunity to connect two active zones of campus life.</p></div>
+          <div class="cs"><div class="cs-lbl">Objective</div><p class="cs-txt">Transform the corridor into a daily-use student commons that also functions as a stormwater management system. Dual accountability to people and infrastructure.</p></div>
+          <div class="cs"><div class="cs-lbl">Strategy &amp; Execution</div><p class="cs-txt">Landform terracing to create differentiated use zones without hard edges. Bioretention integrated into the landform geometry rather than treated as separate utility infrastructure. <strong>My role: grading strategy and planting design</strong> - selecting a dry-land prairie palette for Boulder's semi-arid climate. Four-person team; I developed the grading plan, cross-sections, and planting legend.</p></div>
+          <div class="cs"><div class="cs-lbl">Takeaway</div><p class="cs-txt">Collaborative design is faster when everyone owns a specific discipline. Ambiguity about who decides what is where most team projects lose time.</p></div>
+          <div class="tags"><span class="tag">Campus Design</span><span class="tag">Planting Design</span><span class="tag">Collaborative</span><span class="tag">CU Boulder</span></div>
+        </div>
+      </article>
+    </div>
+
+    <footer>
+      <span class="ft-name">Emilio Adams</span>
+      <span class="ft-copy">© 2026 · Environmental Design, CU Boulder</span>
+      <ul class="ft-nav">
+        <li><a href="#home" data-go="home">Home</a></li>
+        <li><a href="#about" data-go="about">About</a></li>
+        <li><a href="#contact" data-go="contact">Contact</a></li>
+      </ul>
+    </footer>
+  </section>
+
+  <section id="page-about" class="page" aria-labelledby="about-title">
+    <div class="ab-hero">
+      <div class="ab-bg" aria-hidden="true"></div>
+      <div class="ab-ov" aria-hidden="true"></div>
+      <div class="ab-hero-c">
+        <h1 id="about-title">About<br><em>Emilio</em></h1>
+        <p class="ab-pos">Environmental Design Student · Landscape Architecture · CU Boulder</p>
+      </div>
+    </div>
+
+    <div class="ab-body">
+      <div class="ab-main">
+        <h2>"I'm drawn to places that have strong opinions about themselves."</h2>
+        <div class="rule"></div>
+        <p>I'm <strong>Emilio Adams</strong> - a third-year Environmental Design student at CU Boulder concentrating in landscape architecture, expected to graduate May 2026. I grew up between the high desert of New Mexico and the Front Range of Colorado, which means I've been thinking since early on about what makes a landscape feel inevitable rather than imposed.</p>
+        <p>My design approach is grounded in <strong>site analysis first</strong>. Before any design move, I want to understand what a place already knows - how water moves through it, where the wind comes from, what has been growing there long enough to belong. Most of my strongest design decisions have started as observations, not ideas.</p>
+        <p>In the studio I work across hand drawing, physical models, GIS, AutoCAD, and Rhino. Analog and digital tools reveal different things - a 1:50 section sketch shows you proportion, a drainage model shows you consequence - and moving between them is where the design thinking actually happens.</p>
+        <p>Outside the studio I spend significant time in the field. Not documenting in an academic sense - just being in landscapes, paying attention to how they feel at different hours and seasons. I care about <strong>what it feels like to inhabit a place</strong>, not just what it looks like on plan.</p>
+        <p>I'm actively looking for a <strong>summer 2026 internship</strong> or entry-level opportunity with a landscape architecture or environmental planning firm working in the Mountain West - ecological restoration, public land design, and community-scale open space work.</p>
+        <div class="dir-block">
+          <div class="dir-lbl">Current Direction</div>
+          <p class="dir-txt">Moving toward firms doing serious ecological work in the Mountain West - restoration, public land, and open space at community scale. Less interested in purely decorative landscape; more interested in sites with real ecological or hydrological problems to solve. Open to studio environments that value technical rigor and clear representation alongside design quality.</p>
+        </div>
+      </div>
+
+      <aside class="ab-sidebar" aria-label="Profile details">
+        <div class="sb-block">
+          <div class="sb-lbl">Education</div>
+          <div class="sb-row"><strong>University of Colorado Boulder</strong>B.Env.D · Environmental Design<br>Landscape Architecture Concentration<br>Expected May 2026</div>
+        </div>
+        <div class="sb-block">
+          <div class="sb-lbl">Tools</div>
+          <div class="sb-row"><strong>CAD / 3D</strong>AutoCAD · Rhino 3D · SketchUp</div>
+          <div class="sb-row"><strong>Analysis</strong>ArcGIS Pro · QGIS</div>
+          <div class="sb-row"><strong>Visualization</strong>Adobe CC · Hand Rendering · Physical Models</div>
+        </div>
+        <div class="sb-block">
+          <div class="sb-lbl">Disciplines</div>
+          <div class="sb-row">Ecological Site Analysis</div>
+          <div class="sb-row">Grading &amp; Landform Design</div>
+          <div class="sb-row">Native Planting Design</div>
+          <div class="sb-row">Riparian Restoration</div>
+          <div class="sb-row">Public Land Design</div>
+        </div>
+        <div class="sb-block">
+          <div class="sb-lbl">Recognition</div>
+          <div class="sb-row"><strong>Dean's List</strong>Spring 2024</div>
+          <div class="sb-row"><strong>ASLA Student Award</strong>Studio Excellence, 2024</div>
+        </div>
+        <div class="sb-block">
+          <div class="sb-lbl">Available</div>
+          <div class="sb-row">Summer 2026 Internship<br>Landscape Architecture<br>Environmental Planning</div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="ab-photos">
+      <div class="ap"><img src="assets/images/about-01.jpg" alt="Physical model study"></div>
+      <div class="ap"><img src="assets/images/about-02.jpg" alt="Spatial density study drawing"></div>
+      <div class="ap"><img src="assets/images/about-03.jpg" alt="Large context map graphic"></div>
+    </div>
+
+    <footer>
+      <span class="ft-name">Emilio Adams</span>
+      <span class="ft-copy">© 2026 · CU Boulder ENVD</span>
+      <ul class="ft-nav">
+        <li><a href="#home" data-go="home">Home</a></li>
+        <li><a href="#work" data-go="work">Work</a></li>
+        <li><a href="#contact" data-go="contact">Contact</a></li>
+      </ul>
+    </footer>
+  </section>
+
+  <section id="page-contact" class="page" aria-labelledby="contact-title">
+    <div class="ct-hero">
+      <div class="ct-bg" aria-hidden="true"></div>
+      <div class="ct-ov" aria-hidden="true"></div>
+      <div class="ct-hero-c">
+        <h1 id="contact-title">Work<br><em>Together</em></h1>
+        <p class="ct-sub">Open to summer 2026 internship opportunities, studio collaborations, and conversations about ecological design in the Mountain West.</p>
+      </div>
+    </div>
+
+    <div class="ct-body">
+      <div class="ct-info">
+        <h2>Let's talk about the work.</h2>
+        <p>If you're a firm considering summer 2026 interns, a collaborator with a project in mind, or a faculty member - the best way to start is a direct conversation about what you're working on and whether I'd be a useful addition.</p>
+        <div class="ct-rows">
+          <div class="c-row"><span class="c-lbl">Email</span><span class="c-val">emilio.adams@colorado.edu</span></div>
+          <div class="c-row"><span class="c-lbl">Program</span><span class="c-val">Environmental Design, CU Boulder<br>College of Architecture &amp; Planning</span></div>
+          <div class="c-row"><span class="c-lbl">Location</span><span class="c-val">Boulder, Colorado · 40.0150 deg N</span></div>
+          <div class="c-row"><span class="c-lbl">Seeking</span><span class="c-val">Summer 2026 Internship<br>Landscape Architecture · Environmental Planning<br>Mountain West preferred</span></div>
+          <div class="c-row"><span class="c-lbl">Resume</span><span class="c-val">Available on request</span></div>
+        </div>
+      </div>
+      <div>
+        <form class="ct-form" id="contact-form">
+          <div class="f-field">
+            <label class="f-lbl" for="name">Your Name</label>
+            <input class="f-inp" id="name" name="name" type="text" placeholder="Full name">
+          </div>
+          <div class="f-field">
+            <label class="f-lbl" for="email">Email</label>
+            <input class="f-inp" id="email" name="email" type="email" placeholder="your@email.com">
+          </div>
+          <div class="f-field">
+            <label class="f-lbl" for="regarding">Regarding</label>
+            <input class="f-inp" id="regarding" name="regarding" type="text" placeholder="Internship · Collaboration · Inquiry">
+          </div>
+          <div class="f-field">
+            <label class="f-lbl" for="message">Message</label>
+            <textarea class="f-ta" id="message" name="message" placeholder="Tell me about what you're working on..."></textarea>
+          </div>
+          <button class="f-submit" type="submit">Send Message -></button>
+          <p class="form-status" id="form-status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <span class="ft-name">Emilio Adams</span>
+      <span class="ft-copy">© 2026 · Environmental Design, CU Boulder</span>
+      <ul class="ft-nav">
+        <li><a href="#home" data-go="home">Home</a></li>
+        <li><a href="#work" data-go="work">Work</a></li>
+        <li><a href="#about" data-go="about">About</a></li>
+      </ul>
+    </footer>
+  </section>
+</main>
+
+<script>
+  const cur = document.getElementById("cur");
+  const ring = document.getElementById("ring");
+  const nav = document.getElementById("nav");
+  const pages = document.querySelectorAll(".page");
+  const pageLinks = document.querySelectorAll("[data-go]");
+  const contactForm = document.getElementById("contact-form");
+  const formStatus = document.getElementById("form-status");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
+  let mx = 0;
+  let my = 0;
+  let rx = 0;
+  let ry = 0;
+
+  if (!coarsePointer) {
+    document.addEventListener("mousemove", (event) => {
+      mx = event.clientX;
+      my = event.clientY;
+      cur.style.left = mx + "px";
+      cur.style.top = my + "px";
+    });
+
+    const tick = () => {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + "px";
+      ring.style.top = ry + "px";
+      requestAnimationFrame(tick);
+    };
+
+    tick();
+  }
+
+  pageLinks.forEach((element) => {
+    element.addEventListener("mouseenter", () => {
+      if (coarsePointer) return;
+      cur.style.width = "14px";
+      cur.style.height = "14px";
+    });
+
+    element.addEventListener("mouseleave", () => {
+      if (coarsePointer) return;
+      cur.style.width = "8px";
+      cur.style.height = "8px";
+    });
+
+    element.addEventListener("click", (event) => {
+      const targetPage = element.dataset.go;
+      if (!targetPage) return;
+      event.preventDefault();
+      go(targetPage);
+    });
+  });
+
+  window.addEventListener("scroll", () => {
+    nav.classList.toggle("scrolled", window.scrollY > 40);
+  });
+
+  function updateActiveNav(name) {
+    document.querySelectorAll(".nav-links a").forEach((link) => {
+      link.setAttribute("aria-current", link.dataset.go === name ? "page" : "false");
+    });
+  }
+
+  function go(name) {
+    pages.forEach((page) => page.classList.remove("active"));
+    const target = document.getElementById("page-" + name);
+    if (!target) return;
+    target.classList.add("active");
+    updateActiveNav(name);
+    window.history.replaceState(null, "", "#" + name);
+    window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
+  }
+
+  const initialHash = window.location.hash.replace("#", "");
+  if (initialHash && document.getElementById("page-" + initialHash)) {
+    go(initialHash);
+  } else {
+    updateActiveNav("home");
+  }
+
+  contactForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    formStatus.textContent = "Thanks - your message is staged here. Hook this form up to Formspree, Netlify Forms, or your backend when you're ready.";
+  });
+</script>
+</body>
+</html>
